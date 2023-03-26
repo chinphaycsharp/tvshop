@@ -1,0 +1,47 @@
+﻿@model TvShop.Areas.Admin.Models.LoginModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/Login/login.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="global-container">
+        <div class="card login-form">
+            <div class="card-body">
+                <h3 class="card-title text-center">Đăng nhập</h3>
+                <div class="card-text">
+                    @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+                    {
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Tài khoản</label>
+                            @*<input type="email" class="form-control form-control-sm" id="exampleInputEmail1" aria-describedby="emailHelp">*@
+                            @Html.TextBoxFor(model => model.userName, new { @class = "form-control form-control-sm", @autofocus = "autofocus" })
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Mật khẩu</label>
+                            <a href="#" style="float:right;font-size:12px;">Quên mật khẩu?</a>
+                            @Html.PasswordFor(model => model.passWord, new { @class = "form-control form-control-sm", @autofocus = "autofocus" })
+                            @*<input type="password" class="form-control form-control-sm" id="exampleInputPassword1">*@
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+
+                        <div class="sign-up">
+                            Bạn chưa có tài khoản? <a href="#">Tạo tài khoản</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

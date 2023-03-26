@@ -1,0 +1,88 @@
+﻿@model PagedList.IPagedList<TvShop.Models.order>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "GetAllOrder";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Danh sách đơn hàng</h2>
+<div class="sub-header">
+    @using (Html.BeginForm("GetAllOrder", "Order", FormMethod.Get))
+    {
+        <p>
+            Tìm kiếm: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+            <input type="submit" class="btn btn-info" value="Tìm kiếm" />
+        </p>
+    }
+</div>
+@if (ViewBag.Success != null)
+{
+    <div id="msgAlert" class="alert alert-success" role="alert">@ViewBag.Success</div>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Tên khách hàng", "GetAllOrder", new { sortOrder = ViewBag.NameSortParm })
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            SDT
+        </th>
+        <th>
+            Địa chỉ
+        </th>
+        <th>
+            Giá
+        </th>
+        <th>
+            @Html.ActionLink("Ngày mua", "GetAllOrder", new { sortOrder = ViewBag.DateSortParm })
+        </th>
+        <th>
+            Trạng thái
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.nameCustomer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.emailCustomer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.phoneCustomer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.addressCustomer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.totalPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.purchaseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.status)
+            </td>
+            <td>
+                <button class="btn btn-warning">
+                    @Html.ActionLink("Xem", "Detail", new { id = item.id })
+                </button>
+                <button class="btn btn-danger">
+                    @Html.ActionLink("Xóa", "Delete", new { id = item.id })
+                </button>
+            </td>
+        </tr>
+    }
+
+</table>
+Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) trên @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("GetAllOrder",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

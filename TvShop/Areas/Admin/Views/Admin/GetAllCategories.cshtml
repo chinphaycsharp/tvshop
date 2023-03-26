@@ -1,0 +1,75 @@
+﻿@model PagedList.IPagedList<TvShop.Models.category>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "GetAllCategories";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    <script>
+        setTimeout(function () {
+            $("#msgAlert").fadeOut('slow')
+        }, 2000);
+    </script>
+}
+
+<h2>Danh sách danh mục</h2>
+<div class="sub-header">
+    @using (Html.BeginForm("GetAllCategories", "Admin", FormMethod.Get))
+    {
+        <p>
+            Tìm kiếm: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+            <input type="submit" class="btn btn-info" value="Tìm kiếm" />
+        </p>
+    }
+    <p>
+        <button class="btn btn-success text-secondary">
+            @Html.ActionLink("Tạo mới", "Create")
+        </button>
+    </p>
+</div>
+@if (ViewBag.Success != null)
+{
+    <div id="msgAlert" class="alert alert-success" role="alert">@ViewBag.Success</div>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Tiêu đề", "GetAllCategories", new { sortOrder = ViewBag.NameSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Ngày tạo", "GetAllCategories", new { sortOrder = ViewBag.DateSortParm })
+        </th>
+        <th>
+            Trạng thái
+        </th>
+        <th>###</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.createdDate)
+            </td>
+            <td>
+                <span class="label label-success">@(item.status == true ? "Kích hoạt" : "Ngưng")</span>
+            </td>
+            <td>
+                <button class="btn btn-warning">
+                    @Html.ActionLink("Chỉnh sửa", "Edit", new { id = item.id })
+                </button>
+                <button class="btn btn-danger">
+                    @Html.ActionLink("Xóa", "Delete", new { id = item.id })
+                </button>
+            </td>
+        </tr>
+    }
+</table>
+Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) trên @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("GetAllCategories",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

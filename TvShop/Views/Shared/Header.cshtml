@@ -1,0 +1,53 @@
+﻿@model List<TvShop.Models.category>
+@*<ul class="nav navbar-nav">
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Danh mục<span class="caret"></span></a>
+        <ul class="dropdown-menu" aria-labelledby="about-us">
+            @if (Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <li> @Html.ActionLink(item.title, "GetProductByCateId","Home", new { id = item.id }, new { id = item.id })</li>
+                }
+            }
+        </ul>
+    </li>
+</ul>*@
+
+<div class="list-categories">
+    @if (Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <div class="first-list">
+                <div class="div_2">@Html.ActionLink(item.title, "GetProductByCateId", "Home", new { id = item.id }, new { id = item.id })</div>
+                <div class="clear"></div>
+            </div>
+        }
+    }
+</div>
+    @*<div class="first-list">
+        <div class="div_2"><a href="#">Cars</a></div>
+        <div class="div_img">
+            <img src="images/car1.jpg" alt="Cars" title="Cars" width="60" height="39">
+        </div><div class="clear"></div>
+    </div>
+    <div class="first-list">
+        <div class="div_2"><a href="#">Rental</a></div>
+        <div class="div_img">
+            <img src="images/car2.jpg" alt="Cars" title="Cars" width="60" height="39">
+        </div><div class="clear"></div>
+    </div>
+    <div class="first-list">
+        <div class="div_2"><a href="#">Banking</a></div>
+        <div class="div_img">
+            <img src="images/car3.jpg" alt="Cars" title="Cars" width="60" height="39">
+        </div><div class="clear"></div>
+    </div>
+    <div class="first-list">
+        <div class="div_2"><a href="#">Trucks</a></div>
+        <div class="div_img">
+            <img src="images/car4.jpg" alt="Cars" title="Cars" width="60" height="39">
+        </div><div class="clear"></div>
+    </div>
+</div>*@

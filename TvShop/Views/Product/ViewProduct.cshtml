@@ -1,0 +1,238 @@
+﻿@model TvShop.Models.product
+
+@{
+    ViewBag.Title = "ViewProduct";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+<style>
+    .value-button {
+        display: inline-block;
+        border: 1px solid #ddd;
+        margin: 0px;
+        width: 40px;
+        text-align: center;
+        vertical-align: middle;
+        padding: 11px 0;
+        background: #eee;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+        .value-button:hover {
+            cursor: pointer;
+        }
+
+    form #decrease {
+        margin-right: -4px;
+        border-radius: 8px 0 0 8px;
+    }
+
+    form #increase {
+        margin-left: -4px;
+        border-radius: 0 8px 8px 0;
+    }
+
+    form #input-wrap {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    input#number {
+        text-align: center;
+        border: none;
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        margin: 0px;
+        width: 40px;
+        height: 40px;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+
+@section scripts{
+    <script>
+        var count = 0;
+        function increaseValue() {
+            var value = parseInt(document.getElementById('number').value, 10);
+            value = isNaN(value) ? 0 : value;
+            value++;
+            document.getElementById('number').value = value;
+            count = document.getElementById('number').value
+        }
+
+        function decreaseValue() {
+            var value = parseInt(document.getElementById('number').value, 10);
+            value = isNaN(value) ? 0 : value;
+            value < 1 ? value = 1 : '';
+            value--;
+            document.getElementById('number').value = value;
+            console.log(document.getElementById('number').value);
+            count = document.getElementById('number').value
+        }
+
+        function Purchase() {
+            let price = parseInt(document.getElementById('price').innerText, 10);
+            let idProduct = document.getElementById('idProduct').innerText;
+            let name = document.getElementById('name').value;
+            let email = document.getElementById('email').value;
+            let phone = document.getElementById('phone').value;
+            let address = document.getElementById('address').value;
+            let totalPrice = count * price;
+
+            console.log(name);
+            console.log(email);
+            console.log(phone);
+            console.log(address);
+            let data = {
+                totalPrice: totalPrice,
+                idProduct: idProduct,
+                quantity: count,
+                name: name,
+                email: email,
+                phone: phone,
+                address: address,
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/Product/PurchaseProduct",
+                dataType: 'JSON',
+                data: { data: JSON.stringify(data)},
+                success: function (response) {
+                    if (response == true) {
+                        window.location = "/Home/Index";
+                    }
+                    else {
+                        window.location = `/Product/ViewProduct/${idProduct}`;
+                    }
+                }
+            });
+        }
+
+        function LoadProductById(id) {
+            $.ajax({
+                type: "POST",
+                url: "/Product/GetProductById",
+                dataType: 'JSON',
+                data: { id: JSON.stringify(id) },
+                success: function (response) {
+                    console.log(response);
+                    document.getElementById("idName").innerText = "Tên: " + response.name;
+                    document.getElementById("idProduct").innerText = response.id;
+                    document.getElementById("priceLoad").innerText = response.price;
+                }
+            });
+        }
+
+        //setTimeout(function () {
+        //    $("#msgAlert").fadeOut('slow')
+        //}, 2000);
+    </script>
+}
+
+<div id="msgAlert" class="alert alert-success" style="display:none" role="alert">Đặt mua sản phẩm thành công</div>
+<div class="media">
+    <div class="media-left">
+        <a href="#">
+            <img class="media-object" src="https://localhost:44361/@Model.imgSrc" alt="Photo of Pukeko in New Zealand">
+        </a>
+    </div>
+    <div class="media-body">
+        <h4 class="media-heading"><b>Tên: @Model.name</b></h4>
+        <h6 id="idProduct" style="display:none">@Model.id</h6>
+        <p>Mô tả:  @Model.description</p>
+        <p style="color:red">Giá: <span id="price"><b>@Model.price</b></span></p>
+        @if (Model.status == true)
+        {
+            <span>Trạng thái: </span><div class="label label-success">Còn hàng</div>
+        }
+        else
+        {
+            <span>Trạng thái: </span><div class="label label-danger">Liên hệ</div>
+        }
+        <br />
+        <br />
+        <div class="sub-header">
+            <button class="btn btn-success" data-toggle="modal" data-target="#flipFlop" onclick="LoadProductById(@Model.id)">
+                Đặt mua
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="flipFlop" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modalLabel">Đặt mua sản phẩm</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label">Tên</label>
+                            <div class="col-xs-9">
+                                <input type="text" id="name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label">Email</label>
+                            <div class="col-xs-9">
+                                <input type="text" class="form-control" id="email">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label for="first_name" class="col-xs-3 control-label">SĐT</label>
+                            <div class="col-xs-9">
+                                <input type="text" class="form-control" id="phone">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="first_name" class="col-xs-3 control-label">Địa chỉ</label>
+                            <div class="col-xs-9">
+                                <input type="text" class="form-control" id="address">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div>
+                            <h5 class="media-heading"><b><span id="idName"></span></b></h5>
+                            <h5 id="idProduct" style="display:none"></h5>
+                            <h5><b style="color:red">Giá: <span id="priceLoad"></span></b></h5>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div>
+                            <form>
+                                <div class="value-button" id="decrease" onclick="decreaseValue()" value="Decrease Value">-</div>
+                                <input type="number" id="number" value="1" />
+                                <div class="value-button" id="increase" onclick="increaseValue()" value="Increase Value">+</div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="Purchase()">Mua</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>

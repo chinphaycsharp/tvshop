@@ -1,0 +1,51 @@
+﻿@using TvShop.Areas.Admin.Models
+@using TvShop.Common
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                @Html.ActionLink("Danh mục", "GetAllCategories", "Admin", new { area = "Admin" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Sản phẩm", "GetAllProducts", "Admin", new { area = "Admin" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Đơn hàng", "GetAllOrder", "Order", new { area = "Admin" }, new { @class = "navbar-brand" })
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <div class="navbar-brand">
+                        @if (Session[commonConst.user_session] != null)
+                        {
+                            userLogin a = Session[commonConst.user_session] as userLogin;
+                            @a.userName;
+                        }
+                    </div>
+                </li>
+                <li>
+                    @Html.ActionLink("Đăng xuất", "Logout", "Login", new { area = "Admin" }, new { @class = "navbar-brand" })
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <link href="~/Content/Common/style.css" rel="stylesheet" />
+    @RenderSection("scripts", required: false)
+</body>
+</html>
